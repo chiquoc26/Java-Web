@@ -68,6 +68,16 @@
         box-shadow: 0 4px 20px rgba(124, 58, 237, 0.6);
         transform: translateY(-1px);
     }
+    .btn-profile {
+        background: rgba(139, 92, 246, 0.15);
+        color: #c4b5fd;
+        border: 1px solid rgba(139, 92, 246, 0.35);
+    }
+    .btn-profile:hover {
+        background: rgba(139, 92, 246, 0.25);
+        color: #ffffff;
+        border-color: rgba(139, 92, 246, 0.6);
+    }
     .btn-logout {
         background: rgba(255,255,255,0.06);
         color: #94a3b8;
@@ -77,6 +87,35 @@
         background: rgba(255,255,255,0.12);
         color: #e2e8f0;
         border-color: rgba(255,255,255,0.2);
+    }
+    .topbar-avatar {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid #8b5cf6;
+        vertical-align: middle;
+        margin-right: 0.4rem;
+    }
+    .topbar-avatar-placeholder {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #7c3aed, #2563eb);
+        color: #ffffff;
+        font-size: 0.8rem;
+        font-weight: 700;
+        border: 1px solid rgba(255,255,255,0.2);
+        vertical-align: middle;
+        margin-right: 0.4rem;
+    }
+    .user-info-box {
+        display: inline-flex;
+        align-items: center;
+        text-decoration: none;
     }
 </style>
 
@@ -90,7 +129,20 @@
                 <a class="nav-btn btn-login" href="${pageContext.request.contextPath}/login">Đăng nhập</a>
             </c:when>
             <c:otherwise>
-                <span class="user-greeting">Xin chào, <b>${sessionScope.account.fullName}</b></span>
+                <a href="${pageContext.request.contextPath}/user/profile" class="user-info-box" title="Xem thông tin cá nhân">
+                    <c:choose>
+                        <c:when test="${not empty sessionScope.account.avatar}">
+                            <img src="${pageContext.request.contextPath}/image?fname=${sessionScope.account.avatar}" class="topbar-avatar" alt="Avatar"/>
+                        </c:when>
+                        <c:otherwise>
+                            <span class="topbar-avatar-placeholder">
+                                ${not empty sessionScope.account.fullName ? sessionScope.account.fullName.substring(0,1).toUpperCase() : 'U'}
+                            </span>
+                        </c:otherwise>
+                    </c:choose>
+                    <span class="user-greeting">Xin chào, <b>${sessionScope.account.fullName}</b></span>
+                </a>
+                <a class="nav-btn btn-profile" href="${pageContext.request.contextPath}/user/profile">Hồ sơ</a>
                 <a class="nav-btn btn-logout" href="${pageContext.request.contextPath}/logout">Đăng xuất</a>
             </c:otherwise>
         </c:choose>

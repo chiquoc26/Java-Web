@@ -1,0 +1,13 @@
+<sitemesh>
+    <!-- Khong decorator -->
+    <mapping path="/views/login.jsp" decorator="none"/>
+    <mapping path="/views/register.jsp" decorator="none"/>
+    <mapping path="/login" decorator="none"/>
+    <mapping path="/register" decorator="none"/>
+    <mapping path="/image*" decorator="none"/>
+    <mapping path="/image/*" decorator="none"/>
+
+    <!-- Decorator user -->
+    <mapping path="/user/*" decorator="/decorators/default.jsp"/>
+    <mapping path="/views/user/*" decorator="/decorators/default.jsp"/>
+</sitemesh>

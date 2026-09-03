@@ -9,6 +9,7 @@
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
         
         <class>com.example.demobtvenha25_8.model.Category</class>
+        <class>com.example.demobtvenha25_8.model.User</class>
         
         <properties>
             <!-- Database Connection Settings -->
