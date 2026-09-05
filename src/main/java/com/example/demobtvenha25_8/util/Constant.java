@@ -10,4 +10,7 @@ public class Constant {
 
     public static final String USER_UPLOAD_DIR =
             System.getProperty("user.home") + "/user_upload";
+
+    public static final String PRODUCT_UPLOAD_DIR =
+            System.getProperty("user.home") + "/product_upload";
 }

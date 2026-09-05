@@ -104,6 +104,13 @@
             line-height: 1.7;
         }
 
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
         .btn-manage {
             display: inline-flex;
             align-items: center;
@@ -119,12 +126,22 @@
             font-size: 0.95rem;
             letter-spacing: 0.01em;
         }
+        .btn-manage.btn-product {
+            background: linear-gradient(135deg, #059669, #10b981);
+            box-shadow: 0 4px 20px rgba(16, 185, 129, 0.4);
+        }
         .btn-manage::before {
             content: '⚙';
+        }
+        .btn-manage.btn-product::before {
+            content: '📦';
         }
         .btn-manage:hover {
             box-shadow: 0 8px 30px rgba(124, 58, 237, 0.6);
             transform: translateY(-2px);
+        }
+        .btn-manage.btn-product:hover {
+            box-shadow: 0 8px 30px rgba(16, 185, 129, 0.6);
         }
     </style>
 </head>
@@ -136,10 +153,15 @@
     <div class="welcome-card">
         <span class="status-badge">Quản Trị Hệ Thống (ADMIN)</span>
         <h1>Trang Quản Trị Hệ Thống</h1>
-        <p>Chào mừng Admin! Bạn có thể quản lý danh sách danh mục sản phẩm từ liên kết bên dưới.</p>
-        <a class="btn-manage" href="${pageContext.request.contextPath}/admin/category/list">
-            Đến Quản lý Category
-        </a>
+        <p>Chào mừng Admin! Bạn có thể quản lý danh mục và sản phẩm từ các liên kết bên dưới.</p>
+        <div class="btn-group">
+            <a class="btn-manage" href="${pageContext.request.contextPath}/admin/category/list">
+                Đến Quản lý Category
+            </a>
+            <a class="btn-manage btn-product" href="${pageContext.request.contextPath}/admin/products">
+                Đến Quản lý Product
+            </a>
+        </div>
     </div>
 </div>
 

@@ -8,6 +8,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import java.io.Serializable;
 import java.sql.Date;
+import java.sql.Timestamp;
 
 @Entity
 @Table(name = "[User]")
@@ -43,6 +44,15 @@ public class User implements Serializable {
     @Column(name = "createddate")
     private Date createdDate;
 
+    @Column(name = "is_active")
+    private boolean isActive;
+
+    @Column(name = "otp")
+    private String otp;
+
+    @Column(name = "otp_expired")
+    private Timestamp otpExpired;
+
     public User() {}
 
     public User(int id, String email, String userName, String fullName, String password, String avatar, int roleid, String phone, Date createdDate) {
@@ -75,4 +85,13 @@ public class User implements Serializable {
     public void setPhone(String phone) { this.phone = phone; }
     public Date getCreatedDate() { return createdDate; }
     public void setCreatedDate(Date createdDate) { this.createdDate = createdDate; }
+
+    public boolean isActive() { return isActive; }
+    public void setActive(boolean active) { isActive = active; }
+
+    public String getOtp() { return otp; }
+    public void setOtp(String otp) { this.otp = otp; }
+
+    public Timestamp getOtpExpired() { return otpExpired; }
+    public void setOtpExpired(Timestamp otpExpired) { this.otpExpired = otpExpired; }
 }

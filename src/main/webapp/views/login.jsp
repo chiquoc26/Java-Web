@@ -247,6 +247,13 @@
                     ${alert}
                 </div>
             </c:if>
+            <%-- Thong bao dat lai mat khau thanh cong --%>
+            <% if ("success".equals(request.getParameter("reset"))) { %>
+            <div class="alert-success">Mat khau da duoc dat lai. Vui long dang nhap!</div>
+            <% } %>
+            <% if ("true".equals(request.getParameter("activated"))) { %>
+            <div class="alert-success">Kich hoat tai khoan thanh cong! Vui long dang nhap.</div>
+            <% } %>
 
             <form action="${pageContext.request.contextPath}/login" method="post">
                 <div class="form-group">
@@ -267,6 +274,8 @@
             <hr class="divider">
 
             <div class="footer-links">
+                <a href="${pageContext.request.contextPath}/forgot-password">Quên mật khẩu?</a>
+                &nbsp;·&nbsp;
                 <a href="${pageContext.request.contextPath}/register">Chưa có tài khoản? Đăng ký ngay</a>
             </div>
         </div>
