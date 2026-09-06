@@ -9,8 +9,28 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
-        body { background: #0d0b1e; color: #e2e8f0; min-height: 100vh; padding: 2rem 1.5rem; }
-        .container { max-width: 1200px; margin: 0 auto; }
+        body { background: #0d0b1e; color: #e2e8f0; min-height: 100vh; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 2rem 1.5rem; }
+
+        .btn-back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            color: #a78bfa;
+            text-decoration: none;
+            font-size: 0.88rem;
+            font-weight: 600;
+            padding: 0.4rem 0.8rem;
+            border-radius: 8px;
+            background: rgba(167, 139, 250, 0.1);
+            border: 1px solid rgba(167, 139, 250, 0.25);
+            transition: all 0.2s;
+            margin-bottom: 1.2rem;
+        }
+        .btn-back-link:hover {
+            background: rgba(167, 139, 250, 0.2);
+            color: #c4b5fd;
+        }
 
         .header-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem; }
         h1 { font-size: 1.6rem; font-weight: 800; color: #f1f5f9; }
@@ -51,10 +71,17 @@
     </style>
 </head>
 <body>
+
+<jsp:include page="/views/topbar.jsp"/>
+
 <div class="container">
+    <a href="${pageContext.request.contextPath}/admin/home" class="btn-back-link">
+        Về trang chủ Admin
+    </a>
+
     <div class="header-row">
         <h1>Quản Lý <span>Sản Phẩm</span></h1>
-        <a href="${pageContext.request.contextPath}/admin/products?act=add" class="btn-add">+ Thêm sản phẩm</a>
+        <a href="${pageContext.request.contextPath}/admin/products?act=add" class="btn-add">Thêm sản phẩm</a>
     </div>
 
     <div class="table-wrap">
@@ -73,7 +100,7 @@
             <tbody>
                 <c:choose>
                     <c:when test="${empty products}">
-                        <tr class="empty-row"><td colspan="7">📦 Chưa có sản phẩm nào</td></tr>
+                        <tr class="empty-row"><td colspan="7">Chưa có sản phẩm nào</td></tr>
                     </c:when>
                     <c:otherwise>
                         <c:forEach var="p" items="${products}" varStatus="st">
@@ -86,7 +113,7 @@
                                                  src="${pageContext.request.contextPath}/image/product/${p.image}"
                                                  alt="${p.productName}">
                                         </c:when>
-                                        <c:otherwise><div class="no-img-thumb">📦</div></c:otherwise>
+                                        <c:otherwise><div class="no-img-thumb">-</div></c:otherwise>
                                     </c:choose>
                                 </td>
                                 <td>${p.productName}</td>
@@ -96,9 +123,9 @@
                                 </td>
                                 <td>${p.quantity}</td>
                                 <td>
-                                    <a class="btn-edit" href="${pageContext.request.contextPath}/admin/products?act=edit&id=${p.productId}">✏️ Sửa</a>
+                                    <a class="btn-edit" href="${pageContext.request.contextPath}/admin/products?act=edit&id=${p.productId}">Sửa</a>
                                     <a class="btn-delete" href="${pageContext.request.contextPath}/admin/products?act=delete&id=${p.productId}"
-                                       onclick="return confirm('Xóa sản phẩm \'${p.productName}\'?')">🗑️ Xóa</a>
+                                       onclick="return confirm('Xóa sản phẩm \'${p.productName}\'?')">Xóa</a>
                                 </td>
                             </tr>
                         </c:forEach>

@@ -130,12 +130,6 @@
             background: linear-gradient(135deg, #059669, #10b981);
             box-shadow: 0 4px 20px rgba(16, 185, 129, 0.4);
         }
-        .btn-manage::before {
-            content: '⚙';
-        }
-        .btn-manage.btn-product::before {
-            content: '📦';
-        }
         .btn-manage:hover {
             box-shadow: 0 8px 30px rgba(124, 58, 237, 0.6);
             transform: translateY(-2px);
@@ -151,15 +145,18 @@
 
 <div class="main-container">
     <div class="welcome-card">
-        <span class="status-badge">Quản Trị Hệ Thống (ADMIN)</span>
-        <h1>Trang Quản Trị Hệ Thống</h1>
-        <p>Chào mừng Admin! Bạn có thể quản lý danh mục và sản phẩm từ các liên kết bên dưới.</p>
+        <span class="status-badge">Quản trị hệ thống</span>
+        <h1>Trang Quản Trị</h1>
+        <p>Chào mừng Admin. Bạn có thể quản lý danh mục và sản phẩm từ các lựa chọn bên dưới.</p>
         <div class="btn-group">
             <a class="btn-manage" href="${pageContext.request.contextPath}/admin/category/list">
-                Đến Quản lý Category
+                Quản lý Category
             </a>
             <a class="btn-manage btn-product" href="${pageContext.request.contextPath}/admin/products">
-                Đến Quản lý Product
+                Quản lý Product
+            </a>
+            <a class="btn-manage" style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); box-shadow: none;" href="${pageContext.request.contextPath}/home">
+                Xem trang chủ người dùng
             </a>
         </div>
     </div>

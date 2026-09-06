@@ -246,7 +246,8 @@
 
         <div class="btn-group">
             <button type="submit">Cập nhật</button>
-            <a class="btn-cancel" href="${pageContext.request.contextPath}/admin/category/list">Hủy</a>
+            <a class="btn-cancel" href="${pageContext.request.contextPath}/admin/category/list">Về danh sách</a>
+            <a class="btn-cancel" href="${pageContext.request.contextPath}/admin/home">Về trang chủ</a>
         </div>
     </form>
 </div>

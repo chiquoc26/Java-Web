@@ -58,10 +58,14 @@
             flex: 1;
             position: relative;
             z-index: 1;
-            padding: 2.5rem 1.5rem;
+            width: 100%;
+            padding: 1.5rem 1rem;
             display: flex;
             justify-content: center;
             align-items: flex-start;
+        }
+        .layout-main-content > * {
+            width: 100%;
         }
 
         .footer {

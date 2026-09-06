@@ -22,7 +22,7 @@
             background: #0d0b1e;
             color: #e2e8f0;
             min-height: 100vh;
-            padding: 2rem 1.5rem 3rem;
+            padding: 0 0 3rem;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -199,11 +199,19 @@
 </head>
 
 <body>
-<div class="container">
+<jsp:include page="/views/topbar.jsp"/>
+
+<div class="container" style="margin-top: 2rem;">
+    <div style="margin-bottom: 1.2rem;">
+        <a href="${pageContext.request.contextPath}/admin/home" style="display: inline-block; padding: 0.45rem 1rem; border-radius: 8px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); color: #cbd5e1; text-decoration: none; font-size: 0.88rem; font-weight: 600;">
+            Quay lại trang chủ
+        </a>
+    </div>
+
     <div class="header-section">
         <h1>Danh Sách <span>Danh Mục</span></h1>
         <a class="btn btn-primary" href="${pageContext.request.contextPath}/admin/category/add">
-            + Thêm danh mục
+            Thêm danh mục
         </a>
     </div>
 

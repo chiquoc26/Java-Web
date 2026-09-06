@@ -131,10 +131,16 @@
 
 <body>
 <div class="container">
+    <div style="margin-bottom: 1.2rem;">
+        <a href="${pageContext.request.contextPath}/admin/home" style="display: inline-block; padding: 0.45rem 1rem; border-radius: 8px; background: #e2e8f0; color: #334155; text-decoration: none; font-size: 0.88rem; font-weight: 600;">
+            Quay lại trang chủ
+        </a>
+    </div>
+
     <div class="header-section">
         <h1>Danh Sách Danh Mục (JPA)</h1>
         <a class="btn btn-primary" href="${pageContext.request.contextPath}/admin/jpa/category/add">
-            + Thêm danh mục
+            Thêm danh mục
         </a>
     </div>
 

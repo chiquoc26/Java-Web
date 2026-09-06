@@ -13,26 +13,27 @@
         body { background: #0d0b1e; color: #e2e8f0; min-height: 100vh; }
         body::before { content: ''; position: fixed; top: 0; left: -10%; width: 500px; height: 500px; background: radial-gradient(circle, rgba(124,58,237,0.12) 0%, transparent 70%); pointer-events: none; }
 
-        .container { max-width: 1200px; margin: 0 auto; padding: 2rem 1.5rem; position: relative; z-index: 1; }
-        .page-header { margin-bottom: 2rem; }
+        .container { max-width: 960px; margin: 0 auto; padding: 1.5rem 1rem 2.5rem; position: relative; z-index: 1; }
+        .page-header { margin-bottom: 1.5rem; }
         .page-header h1 { font-size: 1.8rem; font-weight: 800; color: #f1f5f9; }
         .page-header h1 span { background: linear-gradient(135deg, #a78bfa, #60a5fa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
         .page-header p { color: #64748b; margin-top: 0.3rem; font-size: 0.9rem; }
 
-        .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1.2rem; margin-bottom: 2.5rem; }
+        .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 210px)); gap: 1.2rem; justify-content: center; margin-bottom: 2.5rem; }
         .product-card {
             background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 16px; overflow: hidden; cursor: pointer;
+            border-radius: 14px; overflow: hidden; cursor: pointer;
             transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
             text-decoration: none; color: inherit; display: block;
+            width: 100%; max-width: 210px;
         }
         .product-card:hover { transform: translateY(-4px); box-shadow: 0 12px 30px rgba(124,58,237,0.25); border-color: rgba(167,139,250,0.3); }
-        .product-img { width: 100%; aspect-ratio: 1/1; object-fit: cover; }
-        .product-img-placeholder { width: 100%; aspect-ratio: 1/1; background: linear-gradient(135deg, rgba(124,58,237,0.2), rgba(37,99,235,0.2)); display: flex; align-items: center; justify-content: center; font-size: 3rem; }
-        .product-info { padding: 0.9rem 1rem; }
-        .product-category { font-size: 0.72rem; font-weight: 600; color: #a78bfa; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.3rem; }
-        .product-name { font-size: 0.92rem; font-weight: 600; color: #e2e8f0; margin-bottom: 0.5rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .product-price { font-size: 1rem; font-weight: 700; color: #34d399; }
+        .product-img { width: 100%; height: 180px; object-fit: cover; }
+        .product-img-placeholder { width: 100%; height: 180px; background: linear-gradient(135deg, rgba(124,58,237,0.2), rgba(37,99,235,0.2)); display: flex; align-items: center; justify-content: center; font-size: 2.5rem; }
+        .product-info { padding: 0.8rem 0.9rem; }
+        .product-category { font-size: 0.7rem; font-weight: 600; color: #a78bfa; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.25rem; }
+        .product-name { font-size: 0.88rem; font-weight: 600; color: #e2e8f0; margin-bottom: 0.4rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .product-price { font-size: 0.95rem; font-weight: 700; color: #34d399; }
 
         /* Pagination */
         .pagination { display: flex; align-items: center; justify-content: center; gap: 0.5rem; flex-wrap: wrap; }
@@ -47,12 +48,11 @@
         .page-btn.disabled { opacity: 0.3; pointer-events: none; }
         .page-info { color: #475569; font-size: 0.85rem; margin-bottom: 1rem; }
 
-        .empty-state { text-align: center; padding: 5rem 0; color: #475569; }
-        .empty-state .emoji { font-size: 4rem; margin-bottom: 1rem; }
+        .empty-state { text-align: center; padding: 4rem 0; color: #475569; }
+        .empty-state .emoji { font-size: 3.5rem; margin-bottom: 0.8rem; }
     </style>
 </head>
 <body>
-<jsp:include page="topbar.jsp"/>
 
 <div class="container">
     <div class="page-header">

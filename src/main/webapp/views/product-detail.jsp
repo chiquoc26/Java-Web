@@ -60,7 +60,6 @@
     </style>
 </head>
 <body>
-<jsp:include page="topbar.jsp"/>
 
 <div class="container">
     <a href="${pageContext.request.contextPath}/product" class="btn-back">← Quay lại danh sách</a>

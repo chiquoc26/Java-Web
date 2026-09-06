@@ -8,10 +8,70 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
-        body { background: #0d0b1e; color: #e2e8f0; min-height: 100vh; display: flex; align-items: flex-start; justify-content: center; padding: 2rem 1.5rem; }
+        body { background: #0d0b1e; color: #e2e8f0; min-height: 100vh; display: flex; flex-direction: column; }
+
+        .main-wrap {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem 1.5rem 3rem;
+            width: 100%;
+        }
+
+        .nav-links-bar {
+            width: 100%;
+            max-width: 640px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.2rem;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+        }
+
+        .btn-back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            color: #a78bfa;
+            text-decoration: none;
+            font-size: 0.88rem;
+            font-weight: 600;
+            padding: 0.4rem 0.8rem;
+            border-radius: 8px;
+            background: rgba(167, 139, 250, 0.1);
+            border: 1px solid rgba(167, 139, 250, 0.25);
+            transition: all 0.2s;
+        }
+        .btn-back-link:hover {
+            background: rgba(167, 139, 250, 0.2);
+            color: #c4b5fd;
+        }
+
+        .breadcrumb-nav {
+            font-size: 0.85rem;
+            color: #64748b;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        .breadcrumb-nav a {
+            color: #94a3b8;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .breadcrumb-nav a:hover {
+            color: #cbd5e1;
+        }
+        .breadcrumb-nav span.current {
+            color: #e2e8f0;
+            font-weight: 600;
+        }
+
         .card {
             background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 20px; padding: 2rem; width: 100%; max-width: 620px;
+            border-radius: 20px; padding: 2rem; width: 100%; max-width: 640px;
             box-shadow: 0 20px 50px rgba(0,0,0,0.4);
         }
         h1 { font-size: 1.5rem; font-weight: 800; color: #f1f5f9; margin-bottom: 1.5rem; }
@@ -52,106 +112,141 @@
 
         .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
 
-        .form-actions { display: flex; gap: 0.8rem; margin-top: 1.5rem; }
+        .form-actions { display: flex; gap: 0.8rem; margin-top: 1.5rem; flex-wrap: wrap; }
         .btn-save {
-            flex: 1; padding: 0.85rem; border: none; border-radius: 12px;
-            cursor: pointer; font-size: 1rem; font-weight: 700; color: #fff;
+            flex: 2; min-width: 140px; padding: 0.85rem; border: none; border-radius: 12px;
+            cursor: pointer; font-size: 0.95rem; font-weight: 700; color: #fff;
             background: linear-gradient(135deg, #7c3aed, #2563eb); transition: opacity 0.2s;
         }
         .btn-save:hover { opacity: 0.88; }
         .btn-cancel {
-            padding: 0.85rem 1.5rem; border-radius: 12px; text-decoration: none;
-            font-size: 0.9rem; font-weight: 600; color: #94a3b8;
+            flex: 1; min-width: 110px; text-align: center;
+            padding: 0.85rem 1rem; border-radius: 12px; text-decoration: none;
+            font-size: 0.88rem; font-weight: 600; color: #94a3b8;
             background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
             transition: background 0.2s;
         }
         .btn-cancel:hover { background: rgba(255,255,255,0.09); color: #e2e8f0; }
 
+        .btn-home {
+            flex: 1; min-width: 110px; text-align: center;
+            padding: 0.85rem 1rem; border-radius: 12px; text-decoration: none;
+            font-size: 0.88rem; font-weight: 600; color: #a78bfa;
+            background: rgba(124, 58, 237, 0.1); border: 1px solid rgba(124, 58, 237, 0.25);
+            transition: background 0.2s;
+        }
+        .btn-home:hover { background: rgba(124, 58, 237, 0.2); color: #c4b5fd; }
+
         .alert-error { background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.4); color: #fca5a5; border-radius: 10px; padding: 0.75rem 1rem; font-size: 0.85rem; margin-bottom: 1.2rem; }
     </style>
 </head>
 <body>
-<div class="card">
-    <h1>${act == 'edit' ? '✏️ Sửa' : '➕ Thêm'} <span>Sản Phẩm</span></h1>
 
-    <c:if test="${not empty error}">
-        <div class="alert-error">${error}</div>
-    </c:if>
+<jsp:include page="/views/topbar.jsp"/>
 
-    <form action="${pageContext.request.contextPath}/admin/products?act=${act}${act == 'edit' ? '&id='.concat(product.productId) : ''}"
-          method="post" enctype="multipart/form-data">
-
-        <div class="form-group">
-            <label>Tên sản phẩm *</label>
-            <input type="text" name="productName" placeholder="Nhập tên sản phẩm"
-                   value="${product.productName}" required>
+<div class="main-wrap">
+    <div class="nav-links-bar">
+        <a href="${pageContext.request.contextPath}/admin/products" class="btn-back-link">
+            Quay lại danh sách sản phẩm
+        </a>
+        <div class="breadcrumb-nav">
+            <a href="${pageContext.request.contextPath}/admin/home">Admin Home</a>
+            <span>/</span>
+            <a href="${pageContext.request.contextPath}/admin/products">Sản phẩm</a>
+            <span>/</span>
+            <span class="current">${act == 'edit' ? 'Sửa' : 'Thêm'}</span>
         </div>
+    </div>
 
-        <div class="form-group">
-            <label>Danh mục *</label>
-            <select name="cateId" required>
-                <option value="">-- Chọn danh mục --</option>
-                <c:forEach var="c" items="${categories}">
-                    <option value="${c.cateId}" ${c.cateId == product.cateId ? 'selected' : ''}>${c.cateName}</option>
-                </c:forEach>
-            </select>
-        </div>
+    <div class="card">
+        <h1>${act == 'edit' ? 'Sửa' : 'Thêm'} <span>Sản Phẩm</span></h1>
 
-        <div class="row-2">
+        <c:if test="${not empty error}">
+            <div class="alert-error">${error}</div>
+        </c:if>
+
+        <form action="${pageContext.request.contextPath}/admin/products?act=${act}${act == 'edit' ? '&id='.concat(product.productId) : ''}"
+              method="post" enctype="multipart/form-data">
+
             <div class="form-group">
-                <label>Giá (₫) *</label>
-                <input type="number" name="price" placeholder="0" min="0" step="1000"
-                       value="${product.price}" required>
+                <label>Tên sản phẩm *</label>
+                <input type="text" name="productName" placeholder="Nhập tên sản phẩm"
+                       value="${product.productName}" required>
             </div>
+
             <div class="form-group">
-                <label>Số lượng *</label>
-                <input type="number" name="quantity" placeholder="0" min="0"
-                       value="${product.quantity}" required>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label>Mô tả</label>
-            <textarea name="description" placeholder="Mô tả sản phẩm...">${product.description}</textarea>
-        </div>
-
-        <div class="form-group">
-            <label>Ảnh sản phẩm</label>
-            <div class="upload-wrap">
-                <label class="upload-label" for="imageFile">
-                    <span class="icon">🖼️</span>
-                    <div class="text">
-                        <strong>Chọn ảnh</strong>
-                        JPG, PNG, WEBP – Tối đa 5MB
-                    </div>
-                </label>
-                <input type="file" id="imageFile" name="image" accept=".jpg,.jpeg,.png,.webp">
-                <img id="previewImg" src="#" alt="Preview">
+                <label>Danh mục *</label>
+                <select name="cateId" required>
+                    <option value="">-- Chọn danh mục --</option>
+                    <c:forEach var="c" items="${categories}">
+                        <option value="${c.cateId}" ${c.cateId == product.cateId ? 'selected' : ''}>${c.cateName}</option>
+                    </c:forEach>
+                </select>
             </div>
 
-            <c:if test="${act == 'edit' && not empty product.image}">
-                <div class="existing-img">
-                    <img src="${pageContext.request.contextPath}/image/product/${product.image}" alt="Ảnh hiện tại">
-                    <p>Ảnh hiện tại. Upload ảnh mới để thay thế.</p>
+            <div class="row-2">
+                <div class="form-group">
+                    <label>Giá (₫) *</label>
+                    <input type="number" name="price" placeholder="0" min="0" step="1000"
+                           value="${product.price}" required>
                 </div>
-            </c:if>
-        </div>
+                <div class="form-group">
+                    <label>Số lượng *</label>
+                    <input type="number" name="quantity" placeholder="0" min="0"
+                           value="${product.quantity}" required>
+                </div>
+            </div>
 
-        <div class="form-actions">
-            <button type="submit" class="btn-save">${act == 'edit' ? 'Cập Nhật' : 'Thêm Sản Phẩm'}</button>
-            <a href="${pageContext.request.contextPath}/admin/products" class="btn-cancel">Hủy</a>
-        </div>
-    </form>
+            <div class="form-group">
+                <label>Mô tả</label>
+                <textarea name="description" placeholder="Mô tả sản phẩm...">${product.description}</textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Ảnh sản phẩm</label>
+                <div class="upload-wrap">
+                    <label class="upload-label" for="imageFile">
+                        <div class="text">
+                            <strong>Chọn ảnh</strong>
+                            JPG, PNG, WEBP – Tối đa 5MB
+                        </div>
+                    </label>
+                    <input type="file" id="imageFile" name="image" accept=".jpg,.jpeg,.png,.webp">
+                    <img id="previewImg" src="#" alt="Preview">
+                </div>
+                <c:if test="${not empty product.image}">
+                    <div class="existing-img">
+                        <img src="${pageContext.request.contextPath}/image/product/${product.image}" alt="Ảnh hiện tại">
+                        <p>Ảnh hiện tại (để trống nếu không đổi)</p>
+                    </div>
+                </c:if>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn-save">Lưu sản phẩm</button>
+                <a href="${pageContext.request.contextPath}/admin/products" class="btn-cancel">Hủy</a>
+                <a href="${pageContext.request.contextPath}/admin/home" class="btn-home">Về Admin Home</a>
+            </div>
+        </form>
+    </div>
 </div>
 
 <script>
-    document.getElementById('imageFile').addEventListener('change', function() {
-        const preview = document.getElementById('previewImg');
-        if (this.files && this.files[0]) {
-            preview.src = URL.createObjectURL(this.files[0]);
-            preview.style.display = 'block';
-        }
-    });
+    const fileInput = document.getElementById('imageFile');
+    const preview   = document.getElementById('previewImg');
+    if (fileInput) {
+        fileInput.addEventListener('change', function () {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = e => {
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    }
 </script>
 </body>
 </html>
