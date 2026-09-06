@@ -86,7 +86,7 @@ public class ProductController extends HttpServlet {
 
     private void handleAdd(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        Product p = buildProduct(req, resp);
+        Product p = buildProduct(req, resp, "add", null);
         if (p == null) return;
         productService.insert(p);
         resp.sendRedirect(req.getContextPath() + "/admin/products");
@@ -110,7 +110,7 @@ public class ProductController extends HttpServlet {
         Product existing = productService.getById(id);
         if (existing == null) { resp.sendRedirect(req.getContextPath() + "/admin/products"); return; }
 
-        Product updated = buildProduct(req, resp);
+        Product updated = buildProduct(req, resp, "edit", existing);
         if (updated == null) return;
 
         if (updated.getImage() == null || updated.getImage().isEmpty()) {
@@ -127,41 +127,69 @@ public class ProductController extends HttpServlet {
         resp.sendRedirect(req.getContextPath() + "/admin/products");
     }
 
-    private Product buildProduct(HttpServletRequest req, HttpServletResponse resp)
+    private Product buildProduct(HttpServletRequest req, HttpServletResponse resp, String act, Product existing)
             throws ServletException, IOException {
 
-        String name        = req.getParameter("productName");
-        String description = req.getParameter("description");
-        String priceStr    = req.getParameter("price");
-        String qtyStr      = req.getParameter("quantity");
-        String cateIdStr   = req.getParameter("cateId");
+        String name        = com.example.demobtvenha25_8.util.ValidationUtil.safeTrim(req.getParameter("productName"));
+        String description = com.example.demobtvenha25_8.util.ValidationUtil.safeTrim(req.getParameter("description"));
+        String priceStr    = com.example.demobtvenha25_8.util.ValidationUtil.safeTrim(req.getParameter("price"));
+        String qtyStr      = com.example.demobtvenha25_8.util.ValidationUtil.safeTrim(req.getParameter("quantity"));
+        String cateIdStr   = com.example.demobtvenha25_8.util.ValidationUtil.safeTrim(req.getParameter("cateId"));
 
-        if (name == null || name.isBlank()) {
-            forwardWithError(req, resp, "Ten san pham khong duoc de trong.");
+        Product draft = new Product();
+        if (existing != null) {
+            draft.setProductId(existing.getProductId());
+            draft.setImage(existing.getImage());
+        }
+        draft.setProductName(name);
+        draft.setDescription(description);
+
+        if (name.length() < 2) {
+            forwardWithError(req, resp, "Tên sản phẩm phải có ít nhất 2 ký tự.", act, draft);
             return null;
         }
 
-        BigDecimal price;
-        int quantity, cateId;
-        try {
-            price    = new BigDecimal(priceStr);
-            quantity = Integer.parseInt(qtyStr);
-            cateId   = Integer.parseInt(cateIdStr);
-        } catch (Exception e) {
-            forwardWithError(req, resp, "Du lieu khong hop le.");
+        if (!com.example.demobtvenha25_8.util.ValidationUtil.isPositiveInteger(cateIdStr)) {
+            forwardWithError(req, resp, "Vui lòng chọn danh mục hợp lệ.", act, draft);
             return null;
         }
+
+        int cateId = Integer.parseInt(cateIdStr);
+        if (categoryService.findById(cateId) == null) {
+            forwardWithError(req, resp, "Danh mục đã chọn không tồn tại.", act, draft);
+            return null;
+        }
+        draft.setCateId(cateId);
+
+        if (!com.example.demobtvenha25_8.util.ValidationUtil.isPositiveNumber(priceStr)) {
+            forwardWithError(req, resp, "Giá sản phẩm phải là số lớn hơn 0.", act, draft);
+            return null;
+        }
+        BigDecimal price = new BigDecimal(priceStr);
+        draft.setPrice(price);
+
+        if (!com.example.demobtvenha25_8.util.ValidationUtil.isNonNegativeInteger(qtyStr)) {
+            forwardWithError(req, resp, "Số lượng phải là số nguyên không âm (>= 0).", act, draft);
+            return null;
+        }
+        int quantity = Integer.parseInt(qtyStr);
+        draft.setQuantity(quantity);
 
         String imagePath = null;
         Part imagePart = req.getPart("image");
         if (imagePart != null && imagePart.getSize() > 0) {
-            String originalName = imagePart.getSubmittedFileName();
-            String ext = getExtension(originalName).toLowerCase();
-            if (!ext.equals(".jpg") && !ext.equals(".jpeg")
-                    && !ext.equals(".png") && !ext.equals(".webp")) {
-                forwardWithError(req, resp, "Chi chap nhan anh JPG, PNG, WEBP.");
+            if (imagePart.getSize() > 5 * 1024 * 1024) {
+                forwardWithError(req, resp, "Dung lượng ảnh không được vượt quá 5MB.", act, draft);
                 return null;
             }
+
+            String originalName = imagePart.getSubmittedFileName();
+            if (!com.example.demobtvenha25_8.util.ValidationUtil.isValidImageExtension(originalName)) {
+                forwardWithError(req, resp, "Chỉ chấp nhận ảnh định dạng JPG, PNG, WEBP.", act, draft);
+                return null;
+            }
+
+            String ext = getExtension(originalName).toLowerCase();
             String fileName = UUID.randomUUID() + ext;
             Path uploadDir  = Paths.get(Constant.PRODUCT_UPLOAD_DIR);
             Files.createDirectories(uploadDir);
@@ -169,20 +197,15 @@ public class ProductController extends HttpServlet {
             imagePath = fileName;
         }
 
-        Product p = new Product();
-        p.setProductName(name.trim());
-        p.setDescription(description);
-        p.setPrice(price);
-        p.setQuantity(quantity);
-        p.setCateId(cateId);
-        p.setImage(imagePath);
-        return p;
+        draft.setImage(imagePath);
+        return draft;
     }
 
-    private void forwardWithError(HttpServletRequest req, HttpServletResponse resp, String msg)
+    private void forwardWithError(HttpServletRequest req, HttpServletResponse resp, String msg, String act, Product product)
             throws ServletException, IOException {
         req.setAttribute("error", msg);
-        req.setAttribute("act", "add");
+        req.setAttribute("act", act);
+        req.setAttribute("product", product);
         req.setAttribute("categories", categoryService.findAll());
         req.getRequestDispatcher("/views/admin/product/form.jsp").forward(req, resp);
     }

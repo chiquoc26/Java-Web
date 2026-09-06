@@ -48,6 +48,19 @@ public class UserDaoImpl implements UserDAO {
     }
 
     @Override
+    public boolean checkExistEmail(String email) {
+        String sql = "SELECT 1 FROM [User] WHERE email = ?";
+        try (Connection conn = DBcontext.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, email);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next();
+            }
+        } catch (Exception e) { e.printStackTrace(); }
+        return false;
+    }
+
+    @Override
     public void insert(User user) {
         String sql = "INSERT INTO [User](email, username, fullname, password, avatar, "
                    + "roleid, phone, createddate, is_active) VALUES (?,?,?,?,?,?,?,?,0)";

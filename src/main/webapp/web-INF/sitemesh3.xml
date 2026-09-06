@@ -13,10 +13,10 @@
     <mapping path="/image*"                       decorator="none"/>
     <mapping path="/image/*"                      decorator="none"/>
 
-    <!-- Decorator user (trang chủ + sản phẩm) -->
-    <mapping path="/home"                         decorator="/decorators/default.jsp"/>
-    <mapping path="/product"                      decorator="/decorators/default.jsp"/>
-    <mapping path="/product-detail"               decorator="/decorators/default.jsp"/>
-    <mapping path="/user/*"                       decorator="/decorators/default.jsp"/>
-    <mapping path="/views/user/*"                 decorator="/decorators/default.jsp"/>
+    <!-- Decorator Bootstrap (trang chu, san pham, user) -->
+    <mapping path="/home"                         decorator="/decorators/bootstrap.jsp"/>
+    <mapping path="/product"                      decorator="/decorators/bootstrap.jsp"/>
+    <mapping path="/product-detail"               decorator="/decorators/bootstrap.jsp"/>
+    <mapping path="/user/*"                       decorator="/decorators/bootstrap.jsp"/>
+    <mapping path="/views/user/*"                 decorator="/decorators/bootstrap.jsp"/>
 </sitemesh>

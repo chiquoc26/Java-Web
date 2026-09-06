@@ -50,22 +50,39 @@
 </head>
 <body>
 <div class="card">
-    <div class="icon">🔑</div>
     <h1>Quên Mật Khẩu</h1>
     <p class="subtitle">Nhập email đăng ký của bạn.<br>Chúng tôi sẽ gửi mã OTP để đặt lại mật khẩu.</p>
+
+    <div id="clientError" class="alert-error" style="display: none;"></div>
 
     <% if (request.getAttribute("alert") != null) { %>
     <div class="alert-error"><%= request.getAttribute("alert") %></div>
     <% } %>
 
-    <form action="${pageContext.request.contextPath}/forgot-password" method="post">
+    <form id="forgotForm" action="${pageContext.request.contextPath}/forgot-password" method="post" onsubmit="return validateForgotForm(event)">
         <div class="form-group">
             <label for="email">Địa chỉ Email</label>
-            <input type="email" id="email" name="email" placeholder="example@gmail.com" required autofocus>
+            <input type="email" id="email" name="email" value="<%= request.getAttribute("email") != null ? request.getAttribute("email") : "" %>" placeholder="example@domain.com" required autofocus>
         </div>
         <button type="submit" class="btn-submit">Gửi Mã OTP</button>
     </form>
-    <a class="back-link" href="${pageContext.request.contextPath}/login">← Quay lại đăng nhập</a>
+    <a class="back-link" href="${pageContext.request.contextPath}/login">Quay lại đăng nhập</a>
 </div>
+
+<script>
+    function validateForgotForm(e) {
+        const clientErr = document.getElementById('clientError');
+        clientErr.style.display = 'none';
+        const email = document.getElementById('email').value.trim();
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!email || !emailRegex.test(email)) {
+            e.preventDefault();
+            clientErr.textContent = 'Vui lòng nhập địa chỉ email hợp lệ.';
+            clientErr.style.display = 'block';
+            return false;
+        }
+        return true;
+    }
+</script>
 </body>
 </html>

@@ -242,6 +242,8 @@
         <div class="login-container">
             <h2>Đăng Nhập</h2>
 
+            <div id="clientError" class="alert-error" style="display: none;"></div>
+
             <c:if test="${not empty alert}">
                 <div class="${alert.contains('thành công') ? 'alert-success' : 'alert-error'}">
                     ${alert}
@@ -255,10 +257,10 @@
             <div class="alert-success">Kich hoat tai khoan thanh cong! Vui long dang nhap.</div>
             <% } %>
 
-            <form action="${pageContext.request.contextPath}/login" method="post">
+            <form id="loginForm" action="${pageContext.request.contextPath}/login" method="post" onsubmit="return validateLoginForm(event)">
                 <div class="form-group">
                     <label for="username">Tài khoản</label>
-                    <input type="text" id="username" name="username" placeholder="Nhập tài khoản..." required autocomplete="username" />
+                    <input type="text" id="username" name="username" value="${username}" placeholder="Nhập tài khoản..." required autocomplete="username" />
                 </div>
                 <div class="form-group">
                     <label for="password">Mật khẩu</label>
@@ -280,5 +282,24 @@
             </div>
         </div>
     </div>
+
+    <script>
+        function validateLoginForm(e) {
+            const clientErr = document.getElementById('clientError');
+            clientErr.style.display = 'none';
+            clientErr.textContent = '';
+
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
+
+            if (!username || !password) {
+                e.preventDefault();
+                clientErr.textContent = 'Vui lòng nhập đầy đủ tài khoản và mật khẩu.';
+                clientErr.style.display = 'block';
+                return false;
+            }
+            return true;
+        }
+    </script>
 </body>
 </html>

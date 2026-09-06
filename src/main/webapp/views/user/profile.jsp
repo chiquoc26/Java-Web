@@ -259,6 +259,8 @@
 <div class="profile-card">
 
     <!-- Thong bao -->
+    <div id="clientError" class="alert alert-error" style="display: none;"></div>
+
     <c:if test="${not empty message}">
         <div class="alert alert-success">${message}</div>
     </c:if>
@@ -267,7 +269,7 @@
     </c:if>
 
     <!-- Form profile -->
-    <form action="${pageContext.request.contextPath}/user/profile" method="post" enctype="multipart/form-data">
+    <form id="profileForm" action="${pageContext.request.contextPath}/user/profile" method="post" enctype="multipart/form-data" onsubmit="return validateProfileForm(event)">
         
         <div class="profile-header">
             <div class="avatar-container">
@@ -391,6 +393,43 @@
             };
             reader.readAsDataURL(input.files[0]);
         }
+    }
+
+    function validateProfileForm(e) {
+        const clientErr = document.getElementById('clientError');
+        clientErr.style.display = 'none';
+
+        const fullName = document.getElementById('fullName').value.trim();
+        const phone = document.getElementById('phone').value.trim();
+        const avatarInput = document.getElementById('avatarInput');
+
+        const phoneRegex = /^(03|05|07|08|09)\d{8}$/;
+
+        let err = '';
+        if (fullName.length < 2) {
+            err = 'Họ và tên phải có ít nhất 2 ký tự.';
+        } else if (phone.length > 0 && !phoneRegex.test(phone)) {
+            err = 'Số điện thoại không hợp lệ (cần đúng 10 số, đầu số VN: 03, 05, 07, 08, 09).';
+        } else if (avatarInput.files && avatarInput.files[0]) {
+            const file = avatarInput.files[0];
+            const allowed = ['.jpg', '.jpeg', '.png', '.webp'];
+            const fileName = file.name.toLowerCase();
+            const isAllowed = allowed.some(ext => fileName.endsWith(ext));
+            if (!isAllowed) {
+                err = 'Chỉ chấp nhận các tệp ảnh định dạng .jpg, .jpeg, .png hoặc .webp.';
+            } else if (file.size > 2 * 1024 * 1024) {
+                err = 'Kích thước ảnh đại diện không được vượt quá 2MB.';
+            }
+        }
+
+        if (err) {
+            e.preventDefault();
+            clientErr.textContent = err;
+            clientErr.style.display = 'block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            return false;
+        }
+        return true;
     }
 </script>
 

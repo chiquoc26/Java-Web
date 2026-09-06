@@ -108,9 +108,11 @@ public class SiteMeshFilter implements Filter {
             rules.add(new MappingRule("/views/register.jsp", "none"));
             rules.add(new MappingRule("/login", "none"));
             rules.add(new MappingRule("/register", "none"));
-            rules.add(new MappingRule("/image*", "none"));
-            rules.add(new MappingRule("/user/*", "/decorators/default.jsp"));
-            rules.add(new MappingRule("/views/user/*", "/decorators/default.jsp"));
+            rules.add(new MappingRule("/home", "/decorators/bootstrap.jsp"));
+            rules.add(new MappingRule("/product", "/decorators/bootstrap.jsp"));
+            rules.add(new MappingRule("/product-detail", "/decorators/bootstrap.jsp"));
+            rules.add(new MappingRule("/user/*", "/decorators/bootstrap.jsp"));
+            rules.add(new MappingRule("/views/user/*", "/decorators/bootstrap.jsp"));
         }
     }
 

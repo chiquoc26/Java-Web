@@ -207,32 +207,38 @@
         <div class="register-container">
             <h2>Đăng Ký Tài Khoản</h2>
 
+            <div id="clientError" class="alert-error" style="display: none;"></div>
+
             <c:if test="${not empty alert}">
                 <div class="alert-error">
                     ${alert}
                 </div>
             </c:if>
 
-            <form action="${pageContext.request.contextPath}/register" method="post">
+            <form id="registerForm" action="${pageContext.request.contextPath}/register" method="post" onsubmit="return validateRegisterForm(event)">
                 <div class="form-group">
                     <label for="username">Tài khoản (*)</label>
-                    <input type="text" id="username" name="username" placeholder="Nhập tên tài khoản..." required />
+                    <input type="text" id="username" name="username" value="${username}" placeholder="4-30 ký tự, chữ, số hoặc gạch dưới..." required />
                 </div>
                 <div class="form-group">
                     <label for="password">Mật khẩu (*)</label>
-                    <input type="password" id="password" name="password" placeholder="Nhập mật khẩu..." required />
+                    <input type="password" id="password" name="password" placeholder="Tối thiểu 6 ký tự..." required />
+                </div>
+                <div class="form-group">
+                    <label for="confirmPassword">Xác nhận mật khẩu (*)</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Nhập lại mật khẩu..." required />
                 </div>
                 <div class="form-group">
                     <label for="fullname">Họ và tên (*)</label>
-                    <input type="text" id="fullname" name="fullname" placeholder="Nhập họ và tên..." required />
+                    <input type="text" id="fullname" name="fullname" value="${fullname}" placeholder="Nhập họ và tên..." required />
                 </div>
                 <div class="form-group">
                     <label for="email">Email (*)</label>
-                    <input type="email" id="email" name="email" placeholder="Nhập địa chỉ email..." required />
+                    <input type="email" id="email" name="email" value="${email}" placeholder="example@domain.com..." required />
                 </div>
                 <div class="form-group">
                     <label for="phone">Số điện thoại</label>
-                    <input type="text" id="phone" name="phone" placeholder="Nhập số điện thoại..." />
+                    <input type="text" id="phone" name="phone" value="${phone}" placeholder="10 chữ số (VD: 0912345678)..." />
                 </div>
                 <button type="submit">Đăng ký</button>
             </form>
@@ -244,5 +250,48 @@
             </div>
         </div>
     </div>
+
+    <script>
+        function validateRegisterForm(e) {
+            const clientErr = document.getElementById('clientError');
+            clientErr.style.display = 'none';
+            clientErr.textContent = '';
+
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const fullname = document.getElementById('fullname').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+
+            const usernameRegex = /^[a-zA-Z0-9_]{4,30}$/;
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            const phoneRegex = /^(03|05|07|08|09)\d{8}$/;
+
+            let error = '';
+
+            if (!usernameRegex.test(username)) {
+                error = 'Tên tài khoản phải từ 4-30 ký tự, chỉ gồm chữ cái, số và dấu gạch dưới.';
+            } else if (password.length < 6) {
+                error = 'Mật khẩu phải có ít nhất 6 ký tự.';
+            } else if (password !== confirmPassword) {
+                error = 'Mật khẩu xác nhận không khớp.';
+            } else if (fullname.length < 2) {
+                error = 'Họ và tên phải có ít nhất 2 ký tự.';
+            } else if (!emailRegex.test(email)) {
+                error = 'Địa chỉ email không đúng định dạng.';
+            } else if (phone.length > 0 && !phoneRegex.test(phone)) {
+                error = 'Số điện thoại không hợp lệ (cần đúng 10 số, đầu số VN: 03, 05, 07, 08, 09).';
+            }
+
+            if (error) {
+                e.preventDefault();
+                clientErr.textContent = error;
+                clientErr.style.display = 'block';
+                return false;
+            }
+            return true;
+        }
+    </script>
 </body>
 </html>

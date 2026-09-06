@@ -62,15 +62,16 @@
 </head>
 <body>
 <div class="card">
-    <div class="icon">🛡️</div>
     <h1>Đặt Lại Mật Khẩu</h1>
     <p class="subtitle">Nhập OTP đã gửi đến <span class="email-hint">${param.email != null ? param.email : requestScope.email}</span></p>
+
+    <div id="clientError" class="alert-error" style="display: none;"></div>
 
     <% if (request.getAttribute("alert") != null) { %>
     <div class="alert-error"><%= request.getAttribute("alert") %></div>
     <% } %>
 
-    <form action="${pageContext.request.contextPath}/verify-reset-otp" method="post">
+    <form id="resetOtpForm" action="${pageContext.request.contextPath}/verify-reset-otp" method="post" onsubmit="return validateResetOtpForm(event)">
         <input type="hidden" name="email" value="${param.email != null ? param.email : requestScope.email}">
 
         <p class="section-label">Mã OTP (6 số)</p>
@@ -85,10 +86,10 @@
 
         <p class="section-label">Mật khẩu mới</p>
         <div class="form-group">
-            <input type="password" name="newPassword" placeholder="Mật khẩu mới (ít nhất 6 ký tự)" minlength="6" required>
+            <input type="password" id="newPassword" name="newPassword" placeholder="Mật khẩu mới (ít nhất 6 ký tự)" minlength="6" required>
         </div>
         <div class="form-group">
-            <input type="password" name="confirmPassword" placeholder="Nhập lại mật khẩu mới" minlength="6" required>
+            <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Nhập lại mật khẩu mới" minlength="6" required>
         </div>
 
         <button type="submit" class="btn-submit">Đặt Lại Mật Khẩu</button>
@@ -103,6 +104,34 @@
         inp.addEventListener('keypress', e => { if (!/[0-9]/.test(e.key)) e.preventDefault(); });
     });
     inputs[0].focus();
+
+    function validateResetOtpForm(e) {
+        const clientErr = document.getElementById('clientError');
+        clientErr.style.display = 'none';
+
+        let code = '';
+        inputs.forEach(i => code += i.value.trim());
+
+        const newPass = document.getElementById('newPassword').value;
+        const confirmPass = document.getElementById('confirmPassword').value;
+
+        let err = '';
+        if (code.length < 6 || !/^\d{6}$/.test(code)) {
+            err = 'Vui lòng nhập đủ 6 chữ số mã OTP.';
+        } else if (newPass.length < 6) {
+            err = 'Mật khẩu mới phải có ít nhất 6 ký tự.';
+        } else if (newPass !== confirmPass) {
+            err = 'Mật khẩu xác nhận không khớp.';
+        }
+
+        if (err) {
+            e.preventDefault();
+            clientErr.textContent = err;
+            clientErr.style.display = 'block';
+            return false;
+        }
+        return true;
+    }
 </script>
 </body>
 </html>

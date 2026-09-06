@@ -161,22 +161,24 @@
     <div class="card">
         <h1>${act == 'edit' ? 'Sửa' : 'Thêm'} <span>Sản Phẩm</span></h1>
 
+        <div id="clientError" class="alert-error" style="display: none;"></div>
+
         <c:if test="${not empty error}">
             <div class="alert-error">${error}</div>
         </c:if>
 
-        <form action="${pageContext.request.contextPath}/admin/products?act=${act}${act == 'edit' ? '&id='.concat(product.productId) : ''}"
-              method="post" enctype="multipart/form-data">
+        <form id="productForm" action="${pageContext.request.contextPath}/admin/products?act=${act}${act == 'edit' ? '&id='.concat(product.productId) : ''}"
+              method="post" enctype="multipart/form-data" onsubmit="return validateProductForm(event)">
 
             <div class="form-group">
                 <label>Tên sản phẩm *</label>
-                <input type="text" name="productName" placeholder="Nhập tên sản phẩm"
+                <input type="text" id="productName" name="productName" placeholder="Nhập tên sản phẩm"
                        value="${product.productName}" required>
             </div>
 
             <div class="form-group">
                 <label>Danh mục *</label>
-                <select name="cateId" required>
+                <select id="cateId" name="cateId" required>
                     <option value="">-- Chọn danh mục --</option>
                     <c:forEach var="c" items="${categories}">
                         <option value="${c.cateId}" ${c.cateId == product.cateId ? 'selected' : ''}>${c.cateName}</option>
@@ -187,19 +189,19 @@
             <div class="row-2">
                 <div class="form-group">
                     <label>Giá (₫) *</label>
-                    <input type="number" name="price" placeholder="0" min="0" step="1000"
+                    <input type="number" id="price" name="price" placeholder="0" min="0" step="any"
                            value="${product.price}" required>
                 </div>
                 <div class="form-group">
                     <label>Số lượng *</label>
-                    <input type="number" name="quantity" placeholder="0" min="0"
+                    <input type="number" id="quantity" name="quantity" placeholder="0" min="0"
                            value="${product.quantity}" required>
                 </div>
             </div>
 
             <div class="form-group">
                 <label>Mô tả</label>
-                <textarea name="description" placeholder="Mô tả sản phẩm...">${product.description}</textarea>
+                <textarea id="description" name="description" placeholder="Mô tả sản phẩm...">${product.description}</textarea>
             </div>
 
             <div class="form-group">
@@ -246,6 +248,46 @@
                 reader.readAsDataURL(file);
             }
         });
+    }
+
+    function validateProductForm(e) {
+        const clientErr = document.getElementById('clientError');
+        clientErr.style.display = 'none';
+
+        const name = document.getElementById('productName').value.trim();
+        const cateId = document.getElementById('cateId').value;
+        const price = parseFloat(document.getElementById('price').value);
+        const qty = parseInt(document.getElementById('quantity').value, 10);
+
+        let err = '';
+        if (name.length < 2) {
+            err = 'Tên sản phẩm phải có ít nhất 2 ký tự.';
+        } else if (!cateId) {
+            err = 'Vui lòng chọn danh mục cho sản phẩm.';
+        } else if (isNaN(price) || price <= 0) {
+            err = 'Giá sản phẩm phải lớn hơn 0.';
+        } else if (isNaN(qty) || qty < 0) {
+            err = 'Số lượng sản phẩm phải lớn hơn hoặc bằng 0.';
+        } else if (fileInput && fileInput.files && fileInput.files[0]) {
+            const file = fileInput.files[0];
+            const allowed = ['.jpg', '.jpeg', '.png', '.webp'];
+            const fileName = file.name.toLowerCase();
+            const isAllowed = allowed.some(ext => fileName.endsWith(ext));
+            if (!isAllowed) {
+                err = 'Chỉ chấp nhận các tệp ảnh định dạng .jpg, .jpeg, .png hoặc .webp.';
+            } else if (file.size > 5 * 1024 * 1024) {
+                err = 'Kích thước ảnh sản phẩm không được vượt quá 5MB.';
+            }
+        }
+
+        if (err) {
+            e.preventDefault();
+            clientErr.textContent = err;
+            clientErr.style.display = 'block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            return false;
+        }
+        return true;
     }
 </script>
 </body>

@@ -28,10 +28,11 @@ public class ForgotPasswordController extends HttpServlet {
             throws ServletException, IOException {
         req.setCharacterEncoding("UTF-8");
 
-        String email = req.getParameter("email");
+        String email = com.example.demobtvenha25_8.util.ValidationUtil.safeTrim(req.getParameter("email"));
+        req.setAttribute("email", email);
 
-        if (email == null || email.isBlank()) {
-            req.setAttribute("alert", "Vui lòng nhập địa chỉ email.");
+        if (!com.example.demobtvenha25_8.util.ValidationUtil.isValidEmail(email)) {
+            req.setAttribute("alert", "Địa chỉ email không đúng định dạng.");
             req.getRequestDispatcher("/views/forgot-password.jsp").forward(req, resp);
             return;
         }
@@ -40,7 +41,7 @@ public class ForgotPasswordController extends HttpServlet {
 
         if (sent) {
             resp.sendRedirect(req.getContextPath() + "/verify-reset-otp?email=" +
-                    java.net.URLEncoder.encode(email, "UTF-8"));
+                    java.net.URLEncoder.encode(email, java.nio.charset.StandardCharsets.UTF_8));
         } else {
             req.setAttribute("alert", "Email không tồn tại trong hệ thống.");
             req.getRequestDispatcher("/views/forgot-password.jsp").forward(req, resp);

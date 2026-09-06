@@ -29,11 +29,27 @@ public class VerifyOtpController extends HttpServlet {
             throws ServletException, IOException {
         req.setCharacterEncoding("UTF-8");
 
-        String email = req.getParameter("email");
-        // Ghép 6 ô OTP lại thành 1 chuỗi
-        String otp = req.getParameter("otp1") + req.getParameter("otp2") +
-                     req.getParameter("otp3") + req.getParameter("otp4") +
-                     req.getParameter("otp5") + req.getParameter("otp6");
+        String email = com.example.demobtvenha25_8.util.ValidationUtil.safeTrim(req.getParameter("email"));
+        String otp = com.example.demobtvenha25_8.util.ValidationUtil.safeTrim(req.getParameter("otp1")) +
+                     com.example.demobtvenha25_8.util.ValidationUtil.safeTrim(req.getParameter("otp2")) +
+                     com.example.demobtvenha25_8.util.ValidationUtil.safeTrim(req.getParameter("otp3")) +
+                     com.example.demobtvenha25_8.util.ValidationUtil.safeTrim(req.getParameter("otp4")) +
+                     com.example.demobtvenha25_8.util.ValidationUtil.safeTrim(req.getParameter("otp5")) +
+                     com.example.demobtvenha25_8.util.ValidationUtil.safeTrim(req.getParameter("otp6"));
+
+        req.setAttribute("email", email);
+
+        if (!com.example.demobtvenha25_8.util.ValidationUtil.isValidEmail(email)) {
+            req.setAttribute("alert", "Email không hợp lệ.");
+            req.getRequestDispatcher("/views/verify-otp.jsp").forward(req, resp);
+            return;
+        }
+
+        if (otp.length() != 6 || !otp.matches("\\d{6}")) {
+            req.setAttribute("alert", "Mã OTP phải gồm đủ 6 chữ số.");
+            req.getRequestDispatcher("/views/verify-otp.jsp").forward(req, resp);
+            return;
+        }
 
         boolean ok = userService.verifyActivationOtp(email, otp);
 
@@ -41,7 +57,6 @@ public class VerifyOtpController extends HttpServlet {
             resp.sendRedirect(req.getContextPath() + "/login?activated=true");
         } else {
             req.setAttribute("alert", "Mã OTP không đúng hoặc đã hết hạn. Vui lòng thử lại.");
-            req.setAttribute("email", email);
             req.getRequestDispatcher("/views/verify-otp.jsp").forward(req, resp);
         }
     }

@@ -60,16 +60,17 @@
 </head>
 <body>
 <div class="card">
-    <div class="icon">🔐</div>
     <h1>Nhập Mã OTP</h1>
     <p class="subtitle">Mã xác thực đã được gửi đến</p>
-    <p class="email-hint">${param.email}</p>
+    <p class="email-hint">${param.email != null ? param.email : requestScope.email}</p>
+
+    <div id="clientError" class="alert-error" style="display: none;"></div>
 
     <% if (request.getAttribute("alert") != null) { %>
     <div class="alert-error"><%= request.getAttribute("alert") %></div>
     <% } %>
 
-    <form action="${pageContext.request.contextPath}/verify-otp" method="post" id="otpForm">
+    <form action="${pageContext.request.contextPath}/verify-otp" method="post" id="otpForm" onsubmit="return validateOtpForm(event)">
         <input type="hidden" name="email" value="${param.email != null ? param.email : requestScope.email}">
         <input type="hidden" name="type"  value="${param.type}">
 
@@ -87,13 +88,13 @@
 
     <div class="resend-row">
         Không nhận được mã?
-        <a href="${pageContext.request.contextPath}/verify-otp?email=${param.email}&resend=true">Gửi lại OTP</a>
+        <a href="${pageContext.request.contextPath}/verify-otp?email=${param.email != null ? param.email : requestScope.email}&resend=true">Gửi lại OTP</a>
     </div>
-    <a class="back-link" href="${pageContext.request.contextPath}/login">← Quay lại đăng nhập</a>
+    <a class="back-link" href="${pageContext.request.contextPath}/login">Quay lại đăng nhập</a>
 </div>
 
 <script>
-    // Tự động chuyển ô khi nhập
+    // Tu dong chuyen o khi nhap
     const inputs = document.querySelectorAll('.otp-inputs input');
     inputs.forEach((inp, i) => {
         inp.addEventListener('input', () => {
@@ -102,10 +103,24 @@
         inp.addEventListener('keydown', e => {
             if (e.key === 'Backspace' && inp.value === '' && i > 0) inputs[i - 1].focus();
         });
-        // Chỉ cho nhập số
+        // Chi cho nhap so
         inp.addEventListener('keypress', e => { if (!/[0-9]/.test(e.key)) e.preventDefault(); });
     });
     inputs[0].focus();
+
+    function validateOtpForm(e) {
+        const clientErr = document.getElementById('clientError');
+        clientErr.style.display = 'none';
+        let code = '';
+        inputs.forEach(i => code += i.value.trim());
+        if (code.length < 6 || !/^\d{6}$/.test(code)) {
+            e.preventDefault();
+            clientErr.textContent = 'Vui lòng nhập đủ 6 chữ số mã OTP.';
+            clientErr.style.display = 'block';
+            return false;
+        }
+        return true;
+    }
 </script>
 </body>
 </html>

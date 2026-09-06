@@ -7,6 +7,7 @@ public interface UserDAO {
     User    get(String username);
     User    getByEmail(String email);
     boolean checkExistUsername(String username);
+    boolean checkExistEmail(String email);
     void    insert(User user);
 
     // OTP – kích hoạt tài khoản và quên mật khẩu

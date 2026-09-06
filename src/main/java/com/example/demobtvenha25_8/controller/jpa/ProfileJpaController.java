@@ -64,29 +64,44 @@ public class ProfileJpaController extends HttpServlet {
             return;
         }
 
-        String fullName = req.getParameter("fullName");
-        String phone = req.getParameter("phone");
+        String fullName = com.example.demobtvenha25_8.util.ValidationUtil.safeTrim(req.getParameter("fullName"));
+        String phone = com.example.demobtvenha25_8.util.ValidationUtil.safeTrim(req.getParameter("phone"));
 
-        if (fullName == null || fullName.trim().isEmpty()) {
+        if (fullName.isEmpty() || fullName.length() < 2) {
             req.setAttribute("user", user);
-            req.setAttribute("error", "Họ và tên không được để trống!");
+            req.setAttribute("error", "Họ và tên phải có ít nhất 2 ký tự!");
             req.getRequestDispatcher("/views/user/profile.jsp").forward(req, resp);
             return;
         }
 
-        user.setFullName(fullName.trim());
-        user.setPhone(phone != null ? phone.trim() : "");
+        if (!phone.isEmpty() && !com.example.demobtvenha25_8.util.ValidationUtil.isValidPhone(phone)) {
+            req.setAttribute("user", user);
+            req.setAttribute("error", "Số điện thoại không hợp lệ (cần 10 chữ số hợp lệ của Việt Nam)!");
+            req.getRequestDispatcher("/views/user/profile.jsp").forward(req, resp);
+            return;
+        }
+
+        user.setFullName(fullName);
+        user.setPhone(phone);
 
         // Upload avatar
         try {
             Part filePart = req.getPart("avatar");
             if (filePart != null && filePart.getSize() > 0) {
+                // Kiểm tra dung lượng tối đa 2MB
+                if (filePart.getSize() > 2 * 1024 * 1024) {
+                    req.setAttribute("user", user);
+                    req.setAttribute("error", "Dung lượng ảnh đại diện không được vượt quá 2MB!");
+                    req.getRequestDispatcher("/views/user/profile.jsp").forward(req, resp);
+                    return;
+                }
+
                 String submittedFileName = filePart.getSubmittedFileName();
                 String extension = getExtension(submittedFileName);
 
-                if (!isAllowedImageExtension(extension)) {
+                if (!com.example.demobtvenha25_8.util.ValidationUtil.isValidImageExtension(submittedFileName)) {
                     req.setAttribute("user", user);
-                    req.setAttribute("error", "Định dạng ảnh không hợp lệ! Vui lòng chọn .jpg, .jpeg, hoặc .png.");
+                    req.setAttribute("error", "Định dạng ảnh không hợp lệ! Vui lòng chọn .jpg, .jpeg, .png hoặc .webp.");
                     req.getRequestDispatcher("/views/user/profile.jsp").forward(req, resp);
                     return;
                 }

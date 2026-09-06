@@ -48,106 +48,60 @@ public class CategoryAddController extends HttpServlet {
 
         request.setCharacterEncoding("UTF-8");
 
-        String cateName = request.getParameter("cateName");
+        String cateName = com.example.demobtvenha25_8.util.ValidationUtil.safeTrim(request.getParameter("cateName"));
+        request.setAttribute("cateName", cateName);
 
-        if (cateName == null || cateName.trim().isEmpty()) {
+        if (cateName.length() < 2) {
+            request.setAttribute("error", "Tên danh mục phải có ít nhất 2 ký tự.");
+            request.getRequestDispatcher("/views/admin/category/add.jsp").forward(request, response);
+            return;
+        }
 
-            request.setAttribute(
-                    "error",
-                    "Tên Category không được để trống"
-            );
-
-            request.getRequestDispatcher(
-                    "/views/admin/category/add.jsp"
-            ).forward(request, response);
-
+        Category existingCate = categoryService.findByCategoryName(cateName);
+        if (existingCate != null) {
+            request.setAttribute("error", "Tên danh mục đã tồn tại trong hệ thống.");
+            request.getRequestDispatcher("/views/admin/category/add.jsp").forward(request, response);
             return;
         }
 
         Part iconPart = request.getPart("icon");
-
         if (iconPart == null || iconPart.getSize() == 0) {
-
-            request.setAttribute(
-                    "error",
-                    "Vui lòng chọn ảnh JPG hoặc JPEG"
-            );
-
-            request.getRequestDispatcher(
-                    "/views/admin/category/add.jsp"
-            ).forward(request, response);
-
+            request.setAttribute("error", "Vui lòng chọn hình ảnh đại diện cho danh mục.");
+            request.getRequestDispatcher("/views/admin/category/add.jsp").forward(request, response);
             return;
         }
 
-        String contentType = iconPart.getContentType();
-
-        if (!"image/jpeg".equalsIgnoreCase(contentType)) {
-
-            request.setAttribute(
-                    "error",
-                    "Chỉ được upload ảnh JPG hoặc JPEG"
-            );
-
-            request.getRequestDispatcher(
-                    "/views/admin/category/add.jsp"
-            ).forward(request, response);
-
+        if (iconPart.getSize() > 5 * 1024 * 1024) {
+            request.setAttribute("error", "Dung lượng hình ảnh không được vượt quá 5MB.");
+            request.getRequestDispatcher("/views/admin/category/add.jsp").forward(request, response);
             return;
         }
 
-        String originalFileName =
-                iconPart.getSubmittedFileName();
+        String originalFileName = iconPart.getSubmittedFileName();
+        if (!com.example.demobtvenha25_8.util.ValidationUtil.isValidImageExtension(originalFileName)) {
+            request.setAttribute("error", "Chỉ chấp nhận các tệp ảnh định dạng .jpg, .jpeg, .png hoặc .webp.");
+            request.getRequestDispatcher("/views/admin/category/add.jsp").forward(request, response);
+            return;
+        }
 
         String extension = getExtension(originalFileName);
+        String newFileName = UUID.randomUUID() + extension.toLowerCase();
 
-        if (!".jpg".equalsIgnoreCase(extension)
-                && !".jpeg".equalsIgnoreCase(extension)) {
-
-            request.setAttribute(
-                    "error",
-                    "File phải có định dạng .jpg hoặc .jpeg"
-            );
-
-            request.getRequestDispatcher(
-                    "/views/admin/category/add.jsp"
-            ).forward(request, response);
-
-            return;
-        }
-
-        String newFileName =
-                UUID.randomUUID() + extension.toLowerCase();
-
-        Path categoryUploadDir =
-                Paths.get(Constant.UPLOAD_DIR, "category");
-
+        Path categoryUploadDir = Paths.get(Constant.UPLOAD_DIR, "category");
         Files.createDirectories(categoryUploadDir);
 
-        Path filePath =
-                categoryUploadDir.resolve(newFileName);
-
+        Path filePath = categoryUploadDir.resolve(newFileName);
         iconPart.write(filePath.toString());
 
-        String iconPath =
-                "category/" + newFileName;
-
-        Category category =
-                new Category(
-                        cateName.trim(),
-                        iconPath
-                );
+        String iconPath = "category/" + newFileName;
+        Category category = new Category(cateName, iconPath);
 
         try {
             categoryService.insert(category);
-            response.sendRedirect(
-                    request.getContextPath() + "/admin/category/list"
-            );
+            response.sendRedirect(request.getContextPath() + "/admin/category/list");
         } catch (RuntimeException e) {
             request.setAttribute("error", e.getMessage());
-            request.getRequestDispatcher(
-                    "/views/admin/category/add.jsp"
-            ).forward(request, response);
+            request.getRequestDispatcher("/views/admin/category/add.jsp").forward(request, response);
         }
     }
 

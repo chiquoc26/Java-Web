@@ -48,11 +48,13 @@ public class LoginController extends HttpServlet {
         req.setCharacterEncoding("UTF-8");
         resp.setCharacterEncoding("UTF-8");
 
-        String username    = req.getParameter("username");
-        String password    = req.getParameter("password");
+        String username    = com.example.demobtvenha25_8.util.ValidationUtil.safeTrim(req.getParameter("username"));
+        String password    = com.example.demobtvenha25_8.util.ValidationUtil.safeTrim(req.getParameter("password"));
         boolean rememberMe = "on".equals(req.getParameter("remember"));
 
-        if (username == null || username.isBlank() || password == null || password.isBlank()) {
+        req.setAttribute("username", username);
+
+        if (username.isEmpty() || password.isEmpty()) {
             req.setAttribute("alert", "Tai khoan hoac mat khau khong duoc de trong");
             req.getRequestDispatcher("/views/login.jsp").forward(req, resp);
             return;

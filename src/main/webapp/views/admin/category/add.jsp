@@ -196,6 +196,8 @@
 <div class="container">
     <h1>Thêm Danh Mục <span>Mới</span></h1>
 
+    <div id="clientError" class="error" style="display: none;"></div>
+
     <%
         String error = (String) request.getAttribute("error");
         if (error != null) {
@@ -207,9 +209,9 @@
         }
     %>
 
-    <form method="post"
+    <form id="categoryAddForm" method="post"
           action="${pageContext.request.contextPath}/admin/category/add"
-          enctype="multipart/form-data">
+          enctype="multipart/form-data" onsubmit="return validateCategoryAddForm(event)">
 
         <div class="form-group">
             <label for="cateName">Tên danh mục</label>
@@ -218,7 +220,7 @@
 
         <div class="form-group">
             <label for="icon">Hình ảnh danh mục</label>
-            <input type="file" id="icon" name="icon" accept=".jpg,.jpeg,image/jpeg" required>
+            <input type="file" id="icon" name="icon" accept=".jpg,.jpeg,.png,.webp,image/*" required>
         </div>
 
         <div class="btn-group">
@@ -229,5 +231,39 @@
     </form>
 </div>
 
+<script>
+    function validateCategoryAddForm(e) {
+        const clientErr = document.getElementById('clientError');
+        clientErr.style.display = 'none';
+
+        const name = document.getElementById('cateName').value.trim();
+        const iconInput = document.getElementById('icon');
+
+        let err = '';
+        if (name.length < 2) {
+            err = 'Tên danh mục phải có ít nhất 2 ký tự.';
+        } else if (!iconInput.files || iconInput.files.length === 0) {
+            err = 'Vui lòng chọn hình ảnh cho danh mục.';
+        } else {
+            const file = iconInput.files[0];
+            const allowed = ['.jpg', '.jpeg', '.png', '.webp'];
+            const fileName = file.name.toLowerCase();
+            const isAllowed = allowed.some(ext => fileName.endsWith(ext));
+            if (!isAllowed) {
+                err = 'Chỉ chấp nhận các tệp ảnh định dạng .jpg, .jpeg, .png hoặc .webp.';
+            } else if (file.size > 5 * 1024 * 1024) {
+                err = 'Kích thước ảnh danh mục không được vượt quá 5MB.';
+            }
+        }
+
+        if (err) {
+            e.preventDefault();
+            clientErr.textContent = err;
+            clientErr.style.display = 'block';
+            return false;
+        }
+        return true;
+    }
+</script>
 </body>
 </html>
