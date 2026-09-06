@@ -23,9 +23,6 @@
             color: #e2e8f0;
             min-height: 100vh;
             padding: 0 0 3rem;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
             position: relative;
         }
 
@@ -41,13 +38,14 @@
         }
 
         .container {
-            width: 100%;
-            max-width: 960px;
+            width: 95%;
+            max-width: 1320px;
+            margin: 2rem auto 0;
             background: rgba(255, 255, 255, 0.04);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 255, 255, 0.09);
-            padding: 2rem 2rem 2.5rem;
+            padding: 2rem 2.5rem 2.5rem;
             border-radius: 20px;
             box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
             position: relative;

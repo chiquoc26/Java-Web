@@ -5,19 +5,23 @@
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
     .navbar {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        background: rgba(15, 10, 30, 0.85);
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        background: rgba(15, 10, 30, 0.85) !important;
         backdrop-filter: blur(16px);
         -webkit-backdrop-filter: blur(16px);
-        padding: 0.85rem 2.5rem;
-        border-bottom: 1px solid rgba(139, 92, 246, 0.25);
-        margin-bottom: 0;
-        position: sticky;
-        top: 0;
-        z-index: 100;
-        box-shadow: 0 4px 30px rgba(0,0,0,0.4);
+        padding: 0.85rem 2.5rem !important;
+        border-bottom: 1px solid rgba(139, 92, 246, 0.25) !important;
+        margin-bottom: 0 !important;
+        position: sticky !important;
+        top: 0 !important;
+        z-index: 100 !important;
+        box-shadow: 0 4px 30px rgba(0,0,0,0.4) !important;
+        flex-wrap: nowrap !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+        min-height: 66px !important;
     }
     .nav-brand a {
         font-size: 1.3rem;

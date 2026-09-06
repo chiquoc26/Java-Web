@@ -13,8 +13,8 @@
         body { background: #0d0b1e; color: #e2e8f0; min-height: 100vh; }
         body::before { content: ''; position: fixed; top: 0; left: -10%; width: 500px; height: 500px; background: radial-gradient(circle, rgba(124,58,237,0.12) 0%, transparent 70%); pointer-events: none; }
 
-        .container { max-width: 960px; margin: 0 auto; padding: 1.5rem 1rem 2.5rem; position: relative; z-index: 1; }
-        .page-header { margin-bottom: 1.5rem; }
+        .container { max-width: 960px; margin: 0 auto; padding: 0.8rem 1rem 2.5rem; position: relative; z-index: 1; }
+        .page-header { margin-bottom: 1.2rem; }
         .page-header h1 { font-size: 1.8rem; font-weight: 800; color: #f1f5f9; }
         .page-header h1 span { background: linear-gradient(135deg, #a78bfa, #60a5fa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
         .page-header p { color: #64748b; margin-top: 0.3rem; font-size: 0.9rem; }

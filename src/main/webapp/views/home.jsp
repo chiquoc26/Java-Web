@@ -23,10 +23,10 @@
             background: radial-gradient(circle, rgba(37,99,235,0.12) 0%, transparent 70%); pointer-events: none;
         }
 
-        .container { max-width: 960px; margin: 0 auto; padding: 1rem 1rem 2rem; position: relative; z-index: 1; }
+        .home-container { max-width: 1200px; margin: 0 auto; padding: 1.2rem 1.5rem 3rem; position: relative; z-index: 1; }
 
         /* Hero */
-        .hero { text-align: center; padding: 1.8rem 0 1.2rem; }
+        .hero { text-align: center; padding: 1.2rem 0 1.5rem; }
         .hero-badge {
             display: inline-flex; align-items: center; gap: 0.4rem;
             background: rgba(16,185,129,0.15); color: #6ee7b7; font-weight: 600;
@@ -35,7 +35,7 @@
             text-transform: uppercase; letter-spacing: 0.04em;
         }
         .hero-badge::before { content: '●'; font-size: 0.6rem; color: #34d399; }
-        .hero h1 { font-size: 2rem; font-weight: 800; color: #f1f5f9; line-height: 1.25; margin-bottom: 0.5rem; }
+        .hero h1 { font-size: 2.1rem; font-weight: 800; color: #f1f5f9; line-height: 1.25; margin-bottom: 0.5rem; }
         .hero h1 span { background: linear-gradient(135deg, #a78bfa, #60a5fa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
         .hero p { color: #64748b; font-size: 0.95rem; }
 
@@ -83,12 +83,11 @@
 
         /* Empty state */
         .empty-state { text-align: center; padding: 3.5rem 0; color: #475569; }
-        .empty-state .emoji { font-size: 3.5rem; margin-bottom: 0.8rem; }
     </style>
 </head>
 <body>
 
-<div class="container">
+<div class="home-container">
     <div class="hero">
         <span class="hero-badge">Chào mừng</span>
         <h1>Khám phá <span>Sản Phẩm</span> Mới Nhất</h1>
@@ -96,14 +95,13 @@
     </div>
 
     <div class="section-header">
-        <div class="section-title">🔥 Mới Nhất <span>(10 sản phẩm)</span></div>
-        <a href="${pageContext.request.contextPath}/product" class="view-all">Xem tất cả →</a>
+        <div class="section-title">Mới Nhất <span>(10 sản phẩm)</span></div>
+        <a href="${pageContext.request.contextPath}/product" class="view-all">Xem tất cả</a>
     </div>
 
     <c:choose>
         <c:when test="${empty latestProducts}">
             <div class="empty-state">
-                <div class="emoji">📦</div>
                 <p>Chưa có sản phẩm nào. Hãy thêm sản phẩm từ trang quản trị!</p>
             </div>
         </c:when>
